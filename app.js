@@ -95,7 +95,7 @@ app.controller("GameController",['$scope','$timeout',function($scope,$timeout){
 			letter: ''
 		};
 		var selectRandomWord = function() {
-			var index = Math.round(Math.random()*words.length);
+			var index = Math.floor(Math.random()*words.length);
 			return words[index];
 		}
 		var newGame = function() {

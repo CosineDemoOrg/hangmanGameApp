@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-<!DOCTYPE html>
 <html>
 <head>
 	<title>Hangman App</title>
@@ -22,12 +21,12 @@
 	data-width="200" 
 	data-min="0" 
 	data-displayprevious="false" 
-	value={{guesses}}
+	ng-value="guesses"
 	data-width="150"
     data-fgColor="#00BCD4"
     data-skin="tron"
     data-thickness=".4"
-    data-displayPrevious=false
+    data-displayPrevious="false"
     ng-model="guesses" >
 		
 	</div>
@@ -37,7 +36,7 @@
 			<i class="correct-icon material-icons" style="font-size:60px;color:#009688;">thumb_up</i>
 			
 				<span class="correct" 
-				 	style=""
+				 	 style=""
 					ng-repeat="letter in correctLettersChosen">{{letter}}</span>
 			
 		</div>
@@ -45,7 +44,7 @@
 		<div class="incorrectLetter">
 		<i class="incorrect-icon material-icons" style="font-size:60px;color:#E91E63;">thumb_down</i>
 
-		 	<span class="incorrect" 
+		 		<span class="incorrect" 
 				  style="top:40px"
 			  ng-repeat="letter in incorrectLettersChosen"><del>{{letter}}</del></span>
 
@@ -88,11 +87,12 @@
 </body>
 <script>
     $(function() {
-        $(".dial").knob({
-        	'min':0,
-    		'max':6
-        }).trigger('change');
-
+        if ($.fn && $.fn.knob) {
+            $(".dial").knob({
+            	'min':0,
+        		'max':6
+            }).trigger('change');
+        }
     });
 </script>
 </html>
