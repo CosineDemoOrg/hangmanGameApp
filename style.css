@@ -56,19 +56,19 @@ body {
 }
 /* Fallback styling when knob plugin isn't present */
 .dial {
-    width: 120px;
-    height: 120px;
+    width: 180px;
+    height: 180px;
     border-radius: 50%;
-    border: 4px solid var(--panel-border);
+    border: 6px solid var(--panel-border);
     background:
         radial-gradient(circle at 30% 30%, rgba(255,255,255,0.08), transparent 50%),
         linear-gradient(180deg, rgba(255,255,255,0.06), rgba(0,0,0,0.15));
     color: var(--text);
     text-align: center;
-    font-size: 36px;         /* larger number */
-    line-height: 120px;      /* vertically center the number */
-    font-weight: 700;        /* stronger emphasis */
-    box-shadow: inset 0 8px 16px rgba(0,0,0,0.25), 0 6px 12px var(--soft-shadow);
+    font-size: 64px;         /* much larger number */
+    line-height: 180px;      /* vertically center the number */
+    font-weight: 800;        /* stronger emphasis */
+    box-shadow: inset 0 10px 20px rgba(0,0,0,0.28), 0 8px 16px var(--soft-shadow);
 }
 .guess-count {
     margin-top: 10px;
