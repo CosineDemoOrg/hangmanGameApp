@@ -29,9 +29,11 @@
 }
 .word{
 	position: absolute;
-    margin-left: 43%;
+    left: 50%;
+    transform: translateX(-50%);
     margin-top: 27px;
     font-size: 33px;
+    color: #111;
 }
 .input>input{
 	width: 200px;
