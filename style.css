@@ -1,20 +1,50 @@
+/* Autumn-themed game UI */
+
+/* Color palette */
+:root {
+    --bg-1: #3c2f2f;        /* deep chestnut */
+    --bg-2: #54433f;        /* cocoa */
+    --bg-3: #7a5b4c;        /* warm brown */
+    --text: #f7e7c1;        /* wheat */
+    --muted-text: #e7d6ac;
+    --panel-bg: rgba(36, 27, 27, 0.55);
+    --panel-border: rgba(247, 231, 193, 0.25);
+
+    --primary: #d97706;     /* amber/ochre */
+    --primary-dark: #b45309;
+    --secondary: #c9971b;   /* golden */
+    --secondary-dark: #a37b10;
+    --success: #2f6b3f;     /* pine green */
+    --danger: #8b1e3f;      /* deep cranberry */
+
+    --button-shadow: rgba(0, 0, 0, 0.35);
+    --soft-shadow: rgba(0, 0, 0, 0.25);
+}
+
 /* Layout and base */
 body {
-    background: rgba(108, 120, 125, 0.35);
     min-height: 100vh;
     position: relative;
     font-family: Arial, sans-serif;
+    color: var(--text);
+    /* layered gradients for subtle texture */
+    background:
+        radial-gradient(1200px 600px at 20% 10%, rgba(255, 255, 255, 0.06), transparent 70%),
+        radial-gradient(1200px 700px at 80% 90%, rgba(255, 255, 255, 0.04), transparent 70%),
+        linear-gradient(160deg, var(--bg-1), var(--bg-2) 40%, var(--bg-3) 100%);
 }
 
 .title {
-    font-size: 50px;
-    color: #fff;
-    margin: 20px 0 10px;
+    font-size: 52px;
+    color: var(--muted-text);
+    margin: 24px 0 10px;
     position: relative;
     top: 0;
     left: 50%;
     transform: translateX(-50%);
     text-align: center;
+    letter-spacing: 2px;
+    text-shadow: 0 2px 0 rgba(0,0,0,0.35), 0 10px 20px rgba(0,0,0,0.25);
 }
 
 /* Guess dial + count */
@@ -24,10 +54,24 @@ body {
     flex-direction: column;
     align-items: center;
 }
+/* Fallback styling when knob plugin isn't present */
+.dial {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    border: 4px solid var(--panel-border);
+    background:
+        radial-gradient(circle at 30% 30%, rgba(255,255,255,0.08), transparent 50%),
+        linear-gradient(180deg, rgba(255,255,255,0.06), rgba(0,0,0,0.15));
+    color: var(--text);
+    text-align: center;
+    font-size: 22px;
+    box-shadow: inset 0 8px 16px rgba(0,0,0,0.25), 0 6px 12px var(--soft-shadow);
+}
 .guess-count {
-    margin-top: 8px;
+    margin-top: 10px;
     font-size: 16px;
-    color: #222;
+    color: var(--muted-text);
 }
 
 /* Panels for letters */
@@ -35,62 +79,106 @@ body {
     position: relative;
     margin-top: 20px;
 }
-.correctLetter {
-    position: absolute;
-    right: 5%;
-}
+.correctLetter,
 .incorrectLetter {
     position: absolute;
-    left: 5%;
+    top: 0;
+    min-width: 260px;
+    padding: 12px 14px;
+    background: var(--panel-bg);
+    border: 1px solid var(--panel-border);
+    border-radius: 8px;
+    backdrop-filter: blur(3px);
+    box-shadow: 0 10px 24px var(--soft-shadow);
 }
+.correctLetter { right: 5%; }
+.incorrectLetter { left: 5%; }
 .correctLetter > i,
 .incorrectLetter > i {
     display: block;
-    margin-bottom: 8px;
+    margin-bottom: 10px;
+    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.4));
 }
+.correctLetter > i { color: var(--success); }
+.incorrectLetter > i { color: var(--danger); }
 .correctLetter > span,
 .incorrectLetter > span {
-    font-size: 32px;
-    margin-right: 10px;
+    font-size: 28px;
+    margin-right: 8px;
+    color: var(--text);
 }
 
 /* Word display */
 .word {
     position: relative;
-    margin-top: 120px;
+    margin-top: 140px;
     text-align: center;
-    font-size: 36px;
-    color: #111;
+    font-size: 40px;
+    color: var(--text);
+    letter-spacing: 3px;
+    text-shadow: 0 3px 10px rgba(0,0,0,0.35);
 }
 
 /* Input and actions */
 .input > input {
-    width: 200px;
-    height: 40px;
+    width: 220px;
+    height: 46px;
     font-size: 28px;
     margin: 60px auto 0;
     display: block;
+    color: var(--text);
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--panel-border);
+    border-radius: 8px;
+    box-shadow: inset 0 6px 12px rgba(0,0,0,0.25);
+    text-align: center;
+    outline: none;
+    transition: box-shadow 180ms ease, border-color 180ms ease;
+}
+.input > input::placeholder { color: rgba(247,231,193,0.6); }
+.input > input:focus {
+    border-color: var(--secondary);
+    box-shadow: 0 0 0 3px rgba(201, 151, 27, 0.25), inset 0 6px 12px rgba(0,0,0,0.25);
+}
+
+/* Buttons */
+.button,
+.hint-button,
+.play-again {
+    font-size: 20px;
+    color: #fff;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 10px;
+    cursor: pointer;
+    box-shadow: 0 8px 18px var(--button-shadow);
+    transition: transform 120ms ease, box-shadow 180ms ease, filter 180ms ease, background 180ms ease;
+    will-change: transform, box-shadow;
 }
 .button {
-    font-size: 20px;
-    color: #fff;
-    background: #00BCD4;
-    border: none;
-    padding: 8px 14px;
-    border-radius: 4px;
-    cursor: pointer;
+    background: linear-gradient(180deg, var(--primary), var(--primary-dark));
 }
-.button[disabled] {
+.button:hover { filter: brightness(1.05); transform: translateY(-1px); }
+.button:active { transform: translateY(0); box-shadow: 0 6px 14px var(--button-shadow); }
+
+.hint-button {
+    background: linear-gradient(180deg, var(--secondary), var(--secondary-dark));
+}
+.hint-button:hover { filter: brightness(1.05); transform: translateY(-1px); }
+.hint-button:active { transform: translateY(0); box-shadow: 0 6px 14px var(--button-shadow); }
+
+.play-again {
+    background: linear-gradient(180deg, var(--primary), var(--primary-dark));
+    font-size: 22px;
+    padding: 10px 20px;
+}
+
+.button[disabled],
+.hint-button[disabled] {
     opacity: 0.6;
     cursor: not-allowed;
-}
-.hint-button {
-    font-size: 20px;
-    color: #fff;
-    background: #FFC107;
-    border: none;
-    padding: 8px 14px;
-    border-radius: 4px;
+    filter: grayscale(15%);
+    box-shadow: none;
 }
 .actions {
     display: flex;
@@ -109,19 +197,10 @@ body {
 .result-text {
     font-size: 24px;
     margin-bottom: 16px;
+    color: var(--muted-text);
 }
-.result-text.win { color: #009688; }
-.result-text.lose { color: #E91E63; }
-
-.play-again {
-    font-size: 22px;
-    padding: 8px 16px;
-    color: #fff;
-    background: #00BCD4;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-}
+.result-text.win { color: var(--success); }
+.result-text.lose { color: var(--danger); }
 
 /* Inline loss-only placement below submit button */
 .inline-answer {
@@ -133,15 +212,17 @@ body {
 /* Reveal animation and spacing for characters */
 .reveal-char {
     display: inline-block;
-    min-width: 20px;
+    min-width: 22px;
     margin-right: 6px;
     text-align: center;
     letter-spacing: 0;
-    font-weight: 600;
+    font-weight: 700;
     opacity: 0;
     transform: translateY(-10px);
-    animation: dropIn 400ms ease forwards;
+    animation: dropIn 420ms ease forwards;
     vertical-align: middle;
+    color: var(--text);
+    text-shadow: 0 2px 8px rgba(0,0,0,0.35);
 }
 .reveal-char:last-child { margin-right: 0; }
 
@@ -166,6 +247,23 @@ body {
         opacity: 1;
         transform: translateY(0);
     }
+}
+
+/* Responsive adjustments */
+@media (max-width: 900px) {
+    .correctLetter,
+    .incorrectLetter {
+        position: static;
+        margin: 10px auto;
+        width: min(92%, 520px);
+    }
+    .panels {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
+    }
+    .word { margin-top: 20px; }
 }
 
 /* Prevent Angular template flicker before compilation */
