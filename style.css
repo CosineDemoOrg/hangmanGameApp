@@ -158,3 +158,6 @@ body {
     gap: 16px;
     margin-top: 30px; /* space below input */
 }
+
+/* Prevent Angular template flicker before compilation */
+[ng-cloak] { display: none !important; }

@@ -114,6 +114,10 @@ app.controller("GameController",['$scope','$timeout',function($scope,$timeout){
 				tempDisplayWord+='*';
 			}
 			$scope.displayWord=tempDisplayWord;
+			// Focus the input at start for better UX
+			$timeout(function(){
+				try { document.getElementById('letterInput') && document.getElementById('letterInput').focus(); } catch(e){}
+			}, 0);
 			// Random word selection.
 		}
 		$scope.playAgain = function(){
@@ -192,8 +196,15 @@ app.controller("GameController",['$scope','$timeout',function($scope,$timeout){
 			}
 		}
 		$scope.letterChosen = function() {
-			// Check if $scope.input.letter is a single letter and an alphabet and not an already chosen letter.
-			// Check if its correct.
+			// Ensure we have a single alphabetic character; ignore invalid input
+			var ch = ($scope.input.letter || '').trim();
+			if (ch.length !== 1 || !/^[A-Za-z]$/.test(ch)) {
+				$scope.input.letter = '';
+				return;
+			}
+			$scope.input.letter = ch;
+
+			// Check if already chosen
 			for(var i=0;i<$scope.correctLettersChosen.length;i++) {
 				if($scope.correctLettersChosen[i].toUpperCase()==$scope.input.letter.toUpperCase()) {
 					$scope.input.letter="";
@@ -262,6 +273,7 @@ app.controller("GameController",['$scope','$timeout',function($scope,$timeout){
         // Keyboard shortcuts:
         // '/' focuses the letter input when game is active.
         // 'Escape' clears and blurs the input (acts like closing an inline interaction).
+        // 'Enter' submits the current letter if valid.
         (function(){
             var handler = function(e){
                 if (e.key === '/') {
@@ -277,6 +289,11 @@ app.controller("GameController",['$scope','$timeout',function($scope,$timeout){
                         $scope.input.letter = '';
                         // ensure Angular digests this external event
                         $scope.$applyAsync();
+                    }
+                } else if (e.key === 'Enter') {
+                    if (!$scope.gameOver && $scope.input && ($scope.input.letter || '').trim().length === 1) {
+                        // submit current letter
+                        $scope.$applyAsync(function(){ $scope.letterChosen(); });
                     }
                 }
             };
