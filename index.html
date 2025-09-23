@@ -67,7 +67,7 @@
 	</div>
 
 	<div class="input" ng-if="!gameOver">
-		<input type="text" name="guess" ng-model="input.letter" ng-minlength="1" ng-maxlength="1" ng-pattern="/^[A-Za-z]+$/">
+		<input id="letterInput" type="text" name="guess" ng-model="input.letter" ng-minlength="1" ng-maxlength="1" ng-pattern="/^[A-Za-z]+$/">
 		
 	</div>
 	<div class="actions" ng-if="!gameOver">
