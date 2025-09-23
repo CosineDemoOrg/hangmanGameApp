@@ -1,53 +1,11 @@
-.guess {
-    margin-left: 40%;
-    margin-top: 20px;
-}
-.correctLetter>i {
-    margin-left: 80%;
-}
-
-.correctLetter {
-    position: absolute;
-    margin-left: 70%;
-}
-.incorrectLetter{
-	position: absolute;
-	margin-left: 10%;
-}
-.correctLetter>span{
-	font-size: 37px;
+/* Layout and base */
+body {
+    background: rgba(108, 120, 125, 0.35);
+    min-height: 100vh;
     position: relative;
-    border-radius: 51%;
-    /* width: 123px; */
-    /* font-size: 32px; */
-    border: 3px solid #666;
+    font-family: Arial, sans-serif;
+}
 
-}
-.incorrectLetter>span{
-	font-size:40px;
-	position: relative;
-}
-.word{
-	position: absolute;
-    margin-left: 43%;
-    margin-top: 27px;
-    font-size: 33px;
-}
-.input>input{
-	width: 200px;
-    height: 30px;
-    font-size: 33px;
-    margin-left: 40%;
-    margin-top: 100px;
-}
-.button{
-    font-size: 30px;
-    color:#fff;
-    background: #00BCD4;
-    border: none;
-    padding: 6px 12px;
-    border-radius: 4px;
-}
 .title {
     font-size: 50px;
     color: #fff;
@@ -58,18 +16,94 @@
     transform: translateX(-50%);
     text-align: center;
 }
-body {
-    background: rgba(108, 120, 125, 0.35);
-    min-height: 100vh;
+
+/* Guess dial + count */
+.guess {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.guess-count {
+    margin-top: 8px;
+    font-size: 16px;
+    color: #222;
+}
+
+/* Panels for letters */
+.panels {
     position: relative;
+    margin-top: 20px;
+}
+.correctLetter {
+    position: absolute;
+    right: 5%;
+}
+.incorrectLetter {
+    position: absolute;
+    left: 5%;
+}
+.correctLetter > i,
+.incorrectLetter > i {
+    display: block;
+    margin-bottom: 8px;
+}
+.correctLetter > span,
+.incorrectLetter > span {
+    font-size: 32px;
+    margin-right: 10px;
+}
+
+/* Word display */
+.word {
+    position: relative;
+    margin-top: 120px;
+    text-align: center;
+    font-size: 36px;
+    color: #111;
+}
+
+/* Input and actions */
+.input > input {
+    width: 200px;
+    height: 40px;
+    font-size: 28px;
+    margin: 60px auto 0;
+    display: block;
+}
+.button {
+    font-size: 20px;
+    color: #fff;
+    background: #00BCD4;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+.button[disabled] {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+.hint-button {
+    font-size: 20px;
+    color: #fff;
+    background: #FFC107;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 4px;
+}
+.actions {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+    margin-top: 20px;
 }
 
 /* Result / answer reveal styles */
 .result {
-    position: absolute;
-    top: 220px;
-    left: 25%;
-    right: 25%;
+    position: relative;
+    margin-top: 30px;
     text-align: center;
 }
 .result-text {
@@ -91,21 +125,19 @@ body {
 
 /* Inline loss-only placement below submit button */
 .inline-answer {
-    position: absolute;
-    top: 340px; /* roughly below the submit button with current layout */
-    left: 25%;
-    right: 25%;
+    position: relative;
+    margin-top: 20px;
     text-align: center;
 }
 
 /* Reveal animation and spacing for characters */
 .reveal-char {
     display: inline-block;
-    min-width: 20px;          /* keeps width per letter so they don't collapse */
-    margin-right: 6px;        /* spacing between letters */
-    text-align: center;       /* center each letter in its cell */
-    letter-spacing: 0;        /* ensure consistent spacing */
-    font-weight: 600;         /* readability */
+    min-width: 20px;
+    margin-right: 6px;
+    text-align: center;
+    letter-spacing: 0;
+    font-weight: 600;
     opacity: 0;
     transform: translateY(-10px);
     animation: dropIn 400ms ease forwards;
@@ -136,25 +168,5 @@ body {
     }
 }
 
-/* Hint button styling */
-.hint-button {
-    font-size: 24px;
-    color: #fff;
-    background: #FFC107; /* amber to differentiate from submit */
-    border: none;
-    padding: 6px 12px;
-    border-radius: 4px;
-}
-.hint-button[disabled] {
-    opacity: 0.6;
-    cursor: not-allowed;
-}
-
-/* Actions row for buttons */
-.actions {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 16px;
-    margin-top: 30px; /* space below input */
-}
+/* Prevent Angular template flicker before compilation */
+[ng-cloak] { display: none !important; }
