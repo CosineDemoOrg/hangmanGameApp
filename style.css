@@ -65,7 +65,9 @@ body {
         linear-gradient(180deg, rgba(255,255,255,0.06), rgba(0,0,0,0.15));
     color: var(--text);
     text-align: center;
-    font-size: 22px;
+    font-size: 36px;         /* larger number */
+    line-height: 120px;      /* vertically center the number */
+    font-weight: 700;        /* stronger emphasis */
     box-shadow: inset 0 8px 16px rgba(0,0,0,0.25), 0 6px 12px var(--soft-shadow);
 }
 .guess-count {
