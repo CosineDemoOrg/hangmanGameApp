@@ -82,7 +82,7 @@ newGame();
 */
 var app = angular.module("HangmanApp",[]);
 app.controller("GameController",['$scope','$timeout',function($scope,$timeout){
-		var words=["Altassian","Remember","Mountain","Pokemon"];
+		var words=["Atlassian","Remember","Mountain","Pokemon"];
 		$scope.incorrectLettersChosen=[];
 		$scope.correctLettersChosen=[];
 		var selectedWord='';
@@ -94,6 +94,13 @@ app.controller("GameController",['$scope','$timeout',function($scope,$timeout){
 		$scope.input = {
 			letter: ''
 		};
+
+		function mask(word) {
+			if (!word || typeof word !== 'string') return '';
+			// Creates a string of '*' of the same length as the word
+			return new Array(word.length + 1).join('*');
+		}
+
 		var selectRandomWord = function() {
 			var index = Math.floor(Math.random()*words.length);
 			return words[index];
@@ -108,12 +115,15 @@ app.controller("GameController",['$scope','$timeout',function($scope,$timeout){
 			$scope.gameOver=false;
 			$scope.didWin=false;
 			$scope.revealChars=[];
-			selectedWord=selectRandomWord();
-			var tempDisplayWord='';
-			for(var i=0;i<selectedWord.length;i++) {
-				tempDisplayWord+='*';
+
+			var w = selectRandomWord();
+			if (!w || typeof w !== 'string' || !w.length) {
+				w = words[0];
 			}
-			$scope.displayWord=tempDisplayWord;
+			selectedWord = w.trim();
+
+			$scope.displayWord = mask(selectedWord);
+
 			// Focus the input at start for better UX
 			$timeout(function(){
 				try { document.getElementById('letterInput') && document.getElementById('letterInput').focus(); } catch(e){}
