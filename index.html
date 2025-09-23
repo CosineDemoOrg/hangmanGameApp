@@ -1,56 +1,44 @@
 <!DOCTYPE html>
 <html>
 <head>
+	<meta charset="utf-8">
 	<title>Hangman App</title>
-	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular.min.js"></script>
-	<script src="app.js"></script>
 	<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+	<link rel="stylesheet" type="text/css" href="./style.css">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
 	<script src="JS/knob.min.js"></script>
-	<link rel="stylesheet" type="text/css" href="./style.css">
-	
-
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular.min.js"></script>
+	<script src="app.js"></script>
 </head>
 <body ng-app="HangmanApp" ng-controller="GameController">
-	
-<p class="title">HANGMAN
-</p>
+	<p class="title">HANGMAN</p>
 
+	<!-- Guesses dial + count -->
 	<div class="guess">
-	<input class="dial" 
-	data-width="200" 
-	data-min="0" 
-	data-displayprevious="false" 
-	ng-value="guesses"
-	data-width="150"
-    data-fgColor="#00BCD4"
-    data-skin="tron"
-    data-thickness=".4"
-    data-displayPrevious="false"
-    ng-model="guesses" >
-		
+		<input class="dial"
+			data-min="0"
+			data-max="6"
+			data-displayprevious="false"
+			data-fgColor="#00BCD4"
+			data-skin="tron"
+			data-thickness=".4"
+			ng-model="guesses">
+		<div class="guess-count">Remaining guesses: {{guesses}}</div>
 	</div>
-	
-	<div>
+
+	<!-- Correct / Incorrect panels -->
+	<div class="panels">
 		<div class="correctLetter">
 			<i class="correct-icon material-icons" style="font-size:60px;color:#009688;">thumb_up</i>
-			
-				<span class="correct" 
-				 	 style=""
-					ng-repeat="letter in correctLettersChosen">{{letter}}</span>
-			
+			<span class="correct" ng-repeat="letter in correctLettersChosen">{{letter}}</span>
 		</div>
-		
 		<div class="incorrectLetter">
-		<i class="incorrect-icon material-icons" style="font-size:60px;color:#E91E63;">thumb_down</i>
-
-		 		<span class="incorrect" 
-				  style="top:40px"
-			  ng-repeat="letter in incorrectLettersChosen"><del>{{letter}}</del></span>
-
+			<i class="incorrect-icon material-icons" style="font-size:60px;color:#E91E63;">thumb_down</i>
+			<span class="incorrect" ng-repeat="letter in incorrectLettersChosen"><del>{{letter}}</del></span>
 		</div>
 	</div>
 
+	<!-- Word display -->
 	<div class="word" ng-bind="displayWord"></div>
 
 	<!-- Result / Answer reveal -->
@@ -65,13 +53,16 @@
 		<button class="play-again" ng-click="playAgain()">Play again</button>
 	</div>
 
+	<!-- Input + actions -->
 	<div class="input" ng-if="!gameOver">
-		<input id="letterInput" type="text" name="guess" ng-model="input.letter" ng-minlength="1" ng-maxlength="1" ng-pattern="/^[A-Za-z]+$/">
-		
+		<input id="letterInput" type="text" name="guess" placeholder="Type a letter"
+			ng-model="input.letter" ng-minlength="1" ng-maxlength="1" ng-pattern="/^[A-Za-z]+$/">
 	</div>
 	<div class="actions" ng-if="!gameOver">
-		<button class="button" ng-click="letterChosen()">SUBMIT</button>
-		<button class="button hint-button" ng-click="useHint()" ng-disabled="guesses<=0 || hintsLeft<=0 || displayWord.indexOf('*')===-1">Hint (-1 guess, {{hintsLeft}} left)</button>
+		<button class="button" ng-click="letterChosen()" ng-disabled="!isValidInput()">SUBMIT</button>
+		<button class="button hint-button" ng-click="useHint()" ng-disabled="guesses<=0 || hintsLeft<=0 || displayWord.indexOf('*')===-1">
+			Hint (-1 guess, {{hintsLeft}} left)
+		</button>
 	</div>
 
 	<!-- Inline loss-only answer shown just below the submit button -->
@@ -84,16 +75,22 @@
 		</p>
 		<button class="play-again" ng-click="playAgain()">Play again</button>
 	</div>
+
+	<script>
+		// Initialize knob if available; keep UI working if not
+		$(function() {
+			if ($.fn && $.fn.knob) {
+				$(".dial").knob({
+					'min': 0,
+					'max': 6,
+					'readOnly': true,
+					'fgColor': '#00BCD4',
+					'skin': 'tron',
+					'thickness': 0.3
+				}).trigger('change');
+			}
+		});
+	</script>
 </body>
-<script>
-    $(function() {
-        if ($.fn && $.fn.knob) {
-            $(".dial").knob({
-            	'min':0,
-        		'max':6
-            }).trigger('change');
-        }
-    });
-</script>
 </html>
 
