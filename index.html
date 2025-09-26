@@ -63,13 +63,27 @@
 				</ul>
 			</section>
 
-			<!-- Input and actions -->
+			<!-- Input, on-screen keyboard and actions -->
 			<section class="controls" ng-if="!gameOver">
 				<div class="input-wrap">
 					<i class="material-icons">keyboard</i>
 					<input id="letterInput" type="text" name="guess" placeholder="Type one letter"
 						   ng-model="input.letter" ng-minlength="1" ng-maxlength="1" ng-pattern="/^[A-Za-z]+$/">
 				</div>
+
+				<!-- On-screen keyboard -->
+				<div class="keyboard" role="group" aria-label="On-screen keyboard">
+					<div class="kb-row" ng-repeat="row in keyRows">
+						<button class="key"
+								ng-repeat="k in row track by $index"
+								ng-class="{'used': isLetterUsed(k)}"
+								ng-disabled="isLetterUsed(k) || guesses<=0"
+								ng-click="onKeyClick(k)">
+							{{k}}
+						</button>
+					</div>
+				</div>
+
 				<div class="buttons">
 					<button class="btn primary" ng-click="letterChosen()" ng-disabled="!isValidInput()">
 						<i class="material-icons">send</i>
@@ -81,7 +95,7 @@
 						<span>Hint</span>
 					</button>
 				</div>
-				<p class="helper">Tip: Press Enter to submit, / to focus input.</p>
+				<p class="helper">Tip: Tap letters above or press Enter to submit, / to focus input.</p>
 			</section>
 
 			<!-- Result overlay -->

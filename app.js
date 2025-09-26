@@ -95,6 +95,13 @@ app.controller("GameController",['$scope','$timeout',function($scope,$timeout){
 	$scope.revealChars = [];
 	$scope.input = { letter: "" };
 
+	// On-screen keyboard rows (QWERTY)
+	$scope.keyRows = [
+		"QWERTYUIOP".split(""),
+		"ASDFGHJKL".split(""),
+		"ZXCVBNM".split("")
+	];
+
 	function mask(word) {
 		return Array(word.length + 1).join("*");
 	}
@@ -237,6 +244,27 @@ app.controller("GameController",['$scope','$timeout',function($scope,$timeout){
 		}
 		if ($scope.displayWord.indexOf("*") === -1) {
 			finalizeGame(true);
+		}
+	};
+
+	// On-screen keyboard helpers
+	$scope.isLetterUsed = function(ch){
+		if (!ch) return false;
+		ch = ch.toUpperCase();
+		for (var i = 0; i < $scope.correctLettersChosen.length; i++) {
+			if ($scope.correctLettersChosen[i] === ch) return true;
+		}
+		for (var j = 0; j < $scope.incorrectLettersChosen.length; j++) {
+			if ($scope.incorrectLettersChosen[j] === ch) return true;
+		}
+		return false;
+	};
+	$scope.onKeyClick = function(ch){
+		if ($scope.gameOver || $scope.guesses <= 0) return;
+		if ($scope.isLetterUsed(ch)) return;
+		$scope.input.letter = (ch || '').toUpperCase();
+		if ($scope.isValidInput()) {
+			$scope.letterChosen();
 		}
 	};
 
