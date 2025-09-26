@@ -65,16 +65,7 @@
 		</button>
 	</div>
 
-	<!-- Inline loss-only answer shown just below the submit button -->
-	<div class="inline-answer" ng-if="gameOver && !didWin">
-		<p class="result-text lose">
-			You lost! The correct word was:
-			<span class="answer">
-				<span ng-repeat="c in revealChars track by $index" class="reveal-char">{{c}}</span>
-			</span>
-		</p>
-		<button class="play-again" ng-click="playAgain()">Play again</button>
-	</div>
+	
 
 	<script>
 		// Initialize knob if available; keep UI working if not
