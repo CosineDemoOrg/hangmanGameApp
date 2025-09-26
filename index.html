@@ -1,96 +1,127 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 	<meta charset="utf-8">
-	<title>Hangman App</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Hangman</title>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 	<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 	<link rel="stylesheet" type="text/css" href="./style.css">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
-	<script src="JS/knob.min.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular.min.js"></script>
 	<script src="app.js"></script>
 </head>
-<body ng-app="HangmanApp" ng-controller="GameController">
-	<p class="title">HANGMAN</p>
+<body ng-app="HangmanApp" ng-controller="GameController" class="theme">
+	<div class="app-shell">
+		<header class="app-header">
+			<div class="brand">
+				<span class="brand-badge">HM</span>
+				<h1 class="brand-title">Hangman</h1>
+			</div>
+			<p class="subtitle">Guess the hidden word before you run out of lives.</p>
+		</header>
 
-	<!-- Guesses dial + count -->
-	<div class="guess">
-		<input class="dial"
-			data-min="0"
-			data-max="6"
-			data-displayprevious="false"
-			data-fgColor="#00BCD4"
-			data-skin="tron"
-			data-thickness=".4"
-			ng-model="guesses">
-		<div class="guess-count">Remaining guesses: {{guesses}}</div>
+		<main class="card">
+			<!-- Status bar -->
+			<section class="status">
+				<div class="status-item">
+					<i class="material-icons icon info">favorite</i>
+					<span class="label">Lives</span>
+					<span class="value">{{guesses}}</span>
+				</div>
+				<div class="status-item">
+					<i class="material-icons icon warn">lightbulb</i>
+					<span class="label">Hints</span>
+					<span class="value">{{hintsLeft}}</span>
+				</div>
+				<div class="status-item">
+					<i class="material-icons icon ok correct-icon">thumb_up</i>
+					<span class="label">Correct</span>
+					<div class="chips">
+						<span class="chip ok" ng-repeat="letter in correctLettersChosen track by $index">{{letter}}</span>
+						<span class="empty" ng-if="!correctLettersChosen.length">—</span>
+					</div>
+				</div>
+				<div class="status-item">
+					<i class="material-icons icon bad incorrect-icon">thumb_down</i>
+					<span class="label">Misses</span>
+					<div class="chips">
+						<span class="chip bad" ng-repeat="letter in incorrectLettersChosen track by $index">{{letter}}</span>
+						<span class="empty" ng-if="!incorrectLettersChosen.length">—</span>
+					</div>
+				</div>
+			</section>
+
+			<!-- Word display as boxes -->
+			<section class="word-area">
+				<ul class="word-list" aria-label="Word to guess">
+					<li class="box" ng-repeat="c in displayWord track by $index">
+						<span ng-bind="c"></span>
+					</li>
+				</ul>
+			</section>
+
+			<!-- Input, on-screen keyboard and actions -->
+			<section class="controls" ng-if="!gameOver">
+				<div class="input-wrap">
+					<i class="material-icons">keyboard</i>
+					<input id="letterInput" type="text" name="guess" placeholder="Type one letter"
+						   ng-model="input.letter" ng-minlength="1" ng-maxlength="1" ng-pattern="/^[A-Za-z]+$/">
+				</div>
+
+				<!-- On-screen keyboard -->
+				<div class="keyboard" role="group" aria-label="On-screen keyboard">
+					<div class="kb-row" ng-repeat="row in keyRows">
+						<button class="key"
+								ng-repeat="k in row track by $index"
+								ng-class="{'used': isLetterUsed(k)}"
+								ng-disabled="isLetterUsed(k) || guesses<=0"
+								ng-click="onKeyClick(k)">
+							{{k}}
+						</button>
+					</div>
+				</div>
+
+				<div class="buttons">
+					<button class="btn primary" ng-click="letterChosen()" ng-disabled="!isValidInput()">
+						<i class="material-icons">send</i>
+						<span>Submit</span>
+					</button>
+					<button class="btn warning" ng-click="useHint()"
+							ng-disabled="guesses<=0 || hintsLeft<=0 || displayWord.indexOf('*')===-1">
+						<i class="material-icons">lightbulb</i>
+						<span>Hint</span>
+					</button>
+				</div>
+				<p class="helper">Tip: Tap letters above or press Enter to submit, / to focus input.</p>
+			</section>
+
+			<!-- Result overlay -->
+			<section class="overlay" ng-if="gameOver">
+				<div class="overlay-card" ng-class="{'win': didWin, 'lose': !didWin}">
+					<i class="material-icons result-icon" ng-class="{'win': didWin, 'lose': !didWin}">
+						{{ didWin ? 'emoji_events' : 'sentiment_dissatisfied' }}
+					</i>
+					<h2 class="result-title" ng-if="didWin">You won!</h2>
+					<h2 class="result-title" ng-if="!didWin">You lost!</h2>
+					<p class="reveal-title">The word was</p>
+					<p class="reveal-answer">
+						<span ng-repeat="c in revealChars track by $index" class="reveal-char">{{c}}</span>
+					</p>
+					<button class="btn primary large" ng-click="playAgain()">
+						<i class="material-icons">replay</i>
+						<span>Play again</span>
+					</button>
+				</div>
+			</section>
+		</main>
+
+		<footer class="app-footer">
+			<p>Built with AngularJS</p>
+		</footer>
 	</div>
-
-	<!-- Correct / Incorrect panels -->
-	<div class="panels">
-		<div class="correctLetter">
-			<i class="correct-icon material-icons" style="font-size:60px;color:#009688;">thumb_up</i>
-			<span class="correct" ng-repeat="letter in correctLettersChosen">{{letter}}</span>
-		</div>
-		<div class="incorrectLetter">
-			<i class="incorrect-icon material-icons" style="font-size:60px;color:#E91E63;">thumb_down</i>
-			<span class="incorrect" ng-repeat="letter in incorrectLettersChosen"><del>{{letter}}</del></span>
-		</div>
-	</div>
-
-	<!-- Word display -->
-	<div class="word" ng-bind="displayWord"></div>
-
-	<!-- Result / Answer reveal -->
-	<div class="result" ng-if="gameOver">
-		<p class="result-text" ng-class="{'win': didWin, 'lose': !didWin}">
-			<span ng-if="didWin">You won! The word was: </span>
-			<span ng-if="!didWin">You lost! The correct word was: </span>
-			<span class="answer">
-				<span ng-repeat="c in revealChars track by $index" class="reveal-char">{{c}}</span>
-			</span>
-		</p>
-		<button class="play-again" ng-click="playAgain()">Play again</button>
-	</div>
-
-	<!-- Input + actions -->
-	<div class="input" ng-if="!gameOver">
-		<input id="letterInput" type="text" name="guess" placeholder="Type a letter"
-			ng-model="input.letter" ng-minlength="1" ng-maxlength="1" ng-pattern="/^[A-Za-z]+$/">
-	</div>
-	<div class="actions" ng-if="!gameOver">
-		<button class="button" ng-click="letterChosen()" ng-disabled="!isValidInput()">SUBMIT</button>
-		<button class="button hint-button" ng-click="useHint()" ng-disabled="guesses<=0 || hintsLeft<=0 || displayWord.indexOf('*')===-1">
-			Hint (-1 guess, {{hintsLeft}} left)
-		</button>
-	</div>
-
-	<!-- Inline loss-only answer shown just below the submit button -->
-	<div class="inline-answer" ng-if="gameOver && !didWin">
-		<p class="result-text lose">
-			You lost! The correct word was:
-			<span class="answer">
-				<span ng-repeat="c in revealChars track by $index" class="reveal-char">{{c}}</span>
-			</span>
-		</p>
-		<button class="play-again" ng-click="playAgain()">Play again</button>
-	</div>
-
-	<script>
-		// Initialize knob if available; keep UI working if not
-		$(function() {
-			if ($.fn && $.fn.knob) {
-				$(".dial").knob({
-					'min': 0,
-					'max': 6,
-					'readOnly': true,
-					'fgColor': '#00BCD4',
-					'skin': 'tron',
-					'thickness': 0.3
-				}).trigger('change');
-			}
-		});
-	</script>
 </body>
 </html>
 
